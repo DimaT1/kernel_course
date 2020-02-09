@@ -6,7 +6,7 @@
 char *DISK_PATH;
 FILE *DISK_FILE;
 
-void disk_init();
+short disk_init();
 short disk_mount();
 short disk_umount();
 

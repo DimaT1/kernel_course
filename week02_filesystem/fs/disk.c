@@ -2,10 +2,11 @@
 
 #include "disk.h"
 
-void disk_init()
+short disk_init()
 {
 	DISK_PATH = NULL;
 	DISK_FILE = NULL;
+	return 0;
 }
 
 short disk_mount()
@@ -23,7 +24,7 @@ short disk_umount()
 		return 1;
 
 	fclose(DISK_FILE);
-	// TODO: check for return if fclose
+	// TODO check for return value of fclose
 	DISK_FILE = NULL;
 
 	return 0;
