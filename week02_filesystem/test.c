@@ -4,10 +4,12 @@
 
 #include "fs/disk.h"
 #include "fs/superblock.h"
+#include "fs/block.h"
+#include "fs/inode.h"
+#include "fs/block_table.h"
 
-int main()
+void disk_test()
 {
-	/* disk tests */
 	DISK_PATH = "./images/not_exist";
 	assert(disk_mount() == 2);
 
@@ -19,8 +21,10 @@ int main()
 	assert(disk_umount() == 1);
 	assert(disk_mount() == 0);
 	assert(disk_umount() == 0);
+}
 
-	/* superblock tests */
+void superblock_test()
+{
 	DISK_PATH = "./images/too_small";
 	assert(disk_mount() == 0);
 	assert(read_superblock() == 1);
@@ -41,6 +45,84 @@ int main()
 	assert(INODE_COUNT == 3);
 	assert(BLOCK_SIZE == 27);
 	assert(disk_umount() == 0);
+}
 
+void block_table_test()
+{
+	uint64_t block;
+	uint64_t i;
+	short used;
+
+	DISK_PATH = "./images/block_table_too_small";
+	assert(disk_mount() == 0);
+	assert(read_superblock() == 0);
+	assert(BLOCK_COUNT == 42);
+	assert(INODE_COUNT == 0);
+	assert(BLOCK_SIZE == 1);
+	assert(block_table_init() == 3);
+	assert(block_table_get_first_unused(&block) == 1);
+	assert(disk_umount() == 0);
+
+	DISK_PATH = "./images/block_table";
+	assert(disk_mount() == 0);
+	assert(read_superblock() == 0);
+	assert(BLOCK_COUNT == 42);
+	assert(INODE_COUNT == 0);
+	assert(BLOCK_SIZE == 1);
+	assert(block_table_init() == 0);
+	assert(BLOCK_TABLE_SIZE == 6);
+
+	for (i = 0; i < 8; ++i) {
+		assert(block_table_check_used(i, &used) == 0);
+		assert(used == 1);
+	}
+
+	assert(block_table_get_first_unused(&block) == 0);
+	assert(block == 8);
+
+	assert(block_table_check_used(8, &used) == 0);
+	assert(used == 0);
+
+	assert(BLOCK_FREE == 4);
+
+	assert(block_table_set_used(8, 1) == 0);
+	assert(block_table_check_used(8, &used) == 0);
+	assert(used == 1);
+	assert(BLOCK_FREE == 3);
+
+	assert(block_table_get_first_unused(&block) == 0);
+	assert(block == 9);
+
+	assert(block_table_set_used(9, 1) == 0);
+	assert(block_table_check_used(9, &used) == 0);
+	assert(used == 1);
+	assert(BLOCK_FREE == 2);
+
+	assert(block_table_get_first_unused(&block) == 0);
+	assert(block == 16);
+
+	assert(block_table_set_used(9, 0) == 0);
+	assert(block_table_get_first_unused(&block) == 0);
+	assert(block == 9);
+	assert(BLOCK_FREE == 3);
+
+	assert(block_table_set_used(8, 0) == 0);
+	assert(block_table_get_first_unused(&block) == 0);
+	assert(block == 8);
+	assert(BLOCK_FREE == 4);
+
+	assert(block_table_save() == 0);
+	assert(block_table_free() == 0);
+	/* TODO load saved tests */
+
+	assert(write_superblock() == 0);
+	assert(disk_umount() == 0);
+}
+
+int main()
+{
+	disk_test();
+	superblock_test();
+	block_table_test();
 	puts("All tests passed");
 }

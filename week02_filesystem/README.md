@@ -26,4 +26,8 @@ Inode consists of:
   - 8 bytes references count
   - 1 byte bool (is a link or not)
   - 1 byte bool (is a directory or not)
-  - child nodes ids (only one if this inode is a link)
+  - 8 bytes parent node id
+  - 8 bytes link node id
+  - 256 byte name
+  - child nodes ids (if this inode is a directory)
+  - blocks addresses (if this inode is a file)
