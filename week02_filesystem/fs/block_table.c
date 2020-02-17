@@ -13,15 +13,16 @@ static uint8_t *block_table;
 
 short block_table_init()
 {
-	size_t buf;
+	size_t buf_size;
 	if (block_table != NULL)
 		return 1;
 
-	BLOCK_TABLE_SIZE = (BLOCK_COUNT % ATOM_SIZE == 0) ?
+	BLOCK_TABLE_LEN = (BLOCK_COUNT % ATOM_SIZE == 0) ?
 				   BLOCK_COUNT / ATOM_SIZE :
 				   BLOCK_COUNT / ATOM_SIZE + 1;
 
-	block_table = (uint8_t *)malloc(BLOCK_TABLE_SIZE * sizeof(uint8_t));
+	BLOCK_TABLE_SIZE = BLOCK_TABLE_LEN * BLOCK_TABLE_ATOM;
+	block_table = (uint8_t *)malloc(BLOCK_TABLE_SIZE);
 
 	if (fseek(DISK_FILE, SUPERBLOCK_SIZE, SEEK_SET) != 0) {
 		free(block_table);
@@ -29,8 +30,8 @@ short block_table_init()
 		return 2;
 	}
 
-	if ((buf = fread(block_table, BLOCK_TABLE_ATOM, BLOCK_TABLE_SIZE,
-			 DISK_FILE)) != BLOCK_TABLE_SIZE) {
+	if ((buf_size = fread(block_table, BLOCK_TABLE_ATOM, BLOCK_TABLE_LEN,
+			 DISK_FILE)) != BLOCK_TABLE_LEN) {
 		free(block_table);
 		block_table = NULL;
 		return 3;
@@ -87,7 +88,7 @@ short block_table_get_first_unused(uint64_t *block)
 	if (block_table == NULL)
 		return 1;
 
-	for (block_index = 0; block_index < BLOCK_TABLE_SIZE; ++block_index) {
+	for (block_index = 0; block_index < BLOCK_TABLE_LEN; ++block_index) {
 		if (block_index == 0xFFFF)
 			continue;
 		for (block_shift = 0; block_shift < ATOM_SIZE; ++block_shift) {
@@ -108,8 +109,8 @@ short block_table_save()
 	if (fseek(DISK_FILE, SUPERBLOCK_SIZE, SEEK_SET) != 0)
 		return 2;
 
-	if (fwrite(block_table, BLOCK_TABLE_ATOM, BLOCK_TABLE_SIZE,
-		   DISK_FILE) != BLOCK_TABLE_SIZE)
+	if (fwrite(block_table, BLOCK_TABLE_ATOM, BLOCK_TABLE_LEN,
+		   DISK_FILE) != BLOCK_TABLE_LEN)
 		return 3;
 
 	return 0;

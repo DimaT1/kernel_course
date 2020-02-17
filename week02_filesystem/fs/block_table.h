@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+uint64_t BLOCK_TABLE_LEN;
 uint64_t BLOCK_TABLE_SIZE;
 
 short block_table_init();

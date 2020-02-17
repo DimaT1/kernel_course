@@ -8,11 +8,11 @@ The filesystem consists of:
     - 8 bytes to encode inodes count
     - 8 bytes to encode free blocks amount
     - 8 bytes to encode free inodes amount
-    - 8 bytes to encode block size (block size should be from 512 to 4096 (bytes))
-    - 8 bytes to encode inode size (inode size should be from 1 to 4 (blocks))
+    - 8 bytes to encode block size (in bytes)
+    - 8 bytes to encode inode size (in bytes)
   - blocks usage table
     - (block count bits rounded to the minimal bytes amount to encode them) to encode each block being used or not
-  - inodes usage table (inodes count * inode size * block size)
+  - inodes table (inodes count * inode size)
     - (inodes count) of inodes
   - blocks
 
@@ -24,6 +24,7 @@ Inode consists of:
   - 8 bytes id
   - 8 bytes file size in bytes
   - 8 bytes references count
+  - 1 byte bool (is used)
   - 1 byte bool (is a link or not)
   - 1 byte bool (is a directory or not)
   - 8 bytes parent node id

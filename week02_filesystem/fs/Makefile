@@ -3,7 +3,7 @@ LD = ld
 
 CFLAGS = -std=c99 -Wall -fsanitize=address,undefined -fno-sanitize-recover=all -fsanitize-undefined-trap-on-error
 
-SRC = disk.c superblock.c block_table.c
+SRC = disk.c superblock.c block_table.c block.c inode.c
 OBJ = $(SRC:.c=.o)
 
 all:

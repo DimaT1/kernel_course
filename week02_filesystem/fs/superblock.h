@@ -16,6 +16,7 @@ uint64_t BLOCK_FREE;
 uint64_t INODE_FREE;
 uint64_t BLOCK_SIZE;
 uint64_t INODE_SIZE;
+// TODO try to add union to simplify read/write
 
 short read_superblock();
 short write_superblock();
