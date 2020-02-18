@@ -1,9 +1,11 @@
 #include "inode.h"
+#include "superblock.h"
 
-static inode_t *inodes;
+inode_t *inodes;
 
 short inodes_init()
 {
+	INODES_SIZE = INODE_COUNT * INODE_SIZE;
 	return 0;
 }
 

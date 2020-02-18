@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include "block.h"
 
-uint64_t INODES_LEN;
 uint64_t INODES_SIZE;
 
 typedef struct {

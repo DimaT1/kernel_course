@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "block.h"
@@ -10,6 +11,7 @@
 short blocks_init()
 {
 	BLOCK_DATA_SIZE = BLOCK_SIZE - 8;
+	BLOCK_DATA_LEN = BLOCK_DATA_SIZE;
 	BLOCKS_SHIFT = SUPERBLOCK_SIZE + BLOCK_TABLE_SIZE + INODES_SIZE;
 	return 0;
 }
@@ -43,7 +45,7 @@ short block_set_buf_data(block_t *s, uint8_t *data, size_t len)
 {
 	if (data == NULL)
 		return 1;
-	if (BLOCK_DATA_SIZE < len)
+	if (BLOCK_DATA_LEN < len)
 		return 2;
 
 	memcpy(s->data, data, len);
@@ -75,23 +77,31 @@ short block_write(block_t *block)
 short block_read(block_t *block)
 {
 	// TODO check position
+	uint64_t len;
+
 	size_t position = BLOCKS_SHIFT + block->pos * BLOCK_SIZE;
+
 	if (fseek(DISK_FILE, position, SEEK_SET) != 0)
 		return 1;
 
-	if (fread(&(block->len), 8, 1, DISK_FILE) != 8)
+	if (fread(&(len), BLOCK_LEN_SIZE, 1, DISK_FILE) != 1)
 		return 2;
 
-	if (fseek(DISK_FILE, block->pos + 8, SEEK_SET) != 0)
+	if (len > BLOCK_DATA_LEN)
 		return 3;
 
-	if (fread(block->data, 8, 1, DISK_FILE) != block->len)
+	block->len = len;
+
+	if (fseek(DISK_FILE, position + BLOCK_LEN_SIZE, SEEK_SET) != 0)
 		return 4;
+
+	if (fread((block->data), 1, block->len, DISK_FILE) != block->len)
+		return 5;
 
 	return 0;
 }
 
-short block_close(block_t *block)
+short block_free(block_t *block)
 {
 	free(block->data);
 	block->data = NULL;

@@ -8,6 +8,7 @@
 #define BLOCK_POS_SIZE 8
 
 uint64_t BLOCK_DATA_SIZE;
+uint64_t BLOCK_DATA_LEN;
 uint64_t BLOCKS_SHIFT;
 
 typedef struct {
@@ -31,7 +32,7 @@ short block_write(block_t *);
 // Reads data from disk
 short block_read(block_t *);
 // Frees RAM buffer
-short block_close(block_t *);
+short block_free(block_t *);
 // Frees data at disk
 short block_disk_free(block_t *);
 

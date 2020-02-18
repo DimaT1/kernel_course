@@ -70,7 +70,7 @@ void block_table_test()
 	assert(INODE_COUNT == 0);
 	assert(BLOCK_SIZE == 1);
 	assert(block_table_init() == 0);
-	assert(BLOCK_TABLE_SIZE == 6);
+	assert(BLOCK_TABLE_LEN == 6);
 
 	for (i = 0; i < 8; ++i) {
 		assert(block_table_check_used(i, &used) == 0);
@@ -119,10 +119,67 @@ void block_table_test()
 	assert(disk_umount() == 0);
 }
 
+void block_test()
+{
+	block_t *a;
+	block_t *b;
+	block_t *c;
+
+	DISK_PATH = "./images/blocks";
+	assert(disk_mount() == 0);
+	assert(read_superblock() == 0);
+	assert(BLOCK_COUNT == 16);
+	assert(INODE_COUNT == 2);
+	assert(BLOCK_FREE == 15);
+	assert(INODE_FREE == 0);
+	assert(BLOCK_SIZE == 10);
+	assert(INODE_SIZE == 2);
+
+	assert(block_table_init() == 0);
+	assert(BLOCK_TABLE_LEN == 2);
+
+	assert(inodes_init() == 0);
+	assert(blocks_init() == 0);
+
+	assert(BLOCKS_SHIFT == 54);
+
+	a = block_create();
+	b = block_create();
+	c = block_create();
+
+	get_free_block(a);
+	get_free_block(b);
+	get_free_block(c);
+
+	block_disk_free(a);
+	block_disk_free(b);
+	block_disk_free(c);
+
+	assert(block_read(b) == 0);
+
+	assert(b->data[0] == 0xAB);
+	assert(b->data[1] == 0xCD);
+
+	block_free(a);
+	block_free(b);
+	block_free(c);
+
+	assert(block_table_free() == 0);
+	assert(write_superblock() == 0);
+	assert(disk_umount() == 0);
+}
+
+void inode_test()
+{
+
+}
+
 int main()
 {
 	disk_test();
 	superblock_test();
 	block_table_test();
+	block_test();
+	inode_test();
 	puts("All tests passed");
 }

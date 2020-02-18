@@ -6,6 +6,7 @@
 uint64_t BLOCK_TABLE_LEN;
 uint64_t BLOCK_TABLE_SIZE;
 
+uint8_t *block_table;
 short block_table_init();
 short block_table_check_used(uint64_t, short *);
 short block_table_set_used(uint64_t, short);

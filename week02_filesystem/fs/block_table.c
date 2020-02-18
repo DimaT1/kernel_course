@@ -9,7 +9,6 @@
 #define BLOCK_TABLE_ATOM 1
 #define ATOM_SIZE 8
 
-static uint8_t *block_table;
 
 short block_table_init()
 {
