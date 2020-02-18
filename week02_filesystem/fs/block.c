@@ -43,6 +43,7 @@ short get_free_block(block_t *block)
 
 short block_set_buf_data(block_t *s, uint8_t *data, size_t len)
 {
+	// UNSAFE
 	if (data == NULL)
 		return 1;
 	if (BLOCK_DATA_LEN < len)
@@ -56,27 +57,28 @@ short block_set_buf_data(block_t *s, uint8_t *data, size_t len)
 
 short block_write(block_t *block)
 {
-	// TODO check position
 	size_t position = BLOCKS_SHIFT + block->pos * BLOCK_SIZE;
+
 	if (fseek(DISK_FILE, position, SEEK_SET) != 0)
 		return 1;
 
-	if (fwrite(&(block->len), BLOCK_LEN_SIZE, 1, DISK_FILE) !=
-	    BLOCK_LEN_SIZE)
+	if (block->len > BLOCK_DATA_LEN)
 		return 2;
 
-	if (fseek(DISK_FILE, position + BLOCK_LEN_SIZE, SEEK_SET) != 0)
+	if (fwrite(&(block->len), BLOCK_LEN_SIZE, 1, DISK_FILE) != 1)
 		return 3;
 
-	if (fwrite(block->data, 8, 1, DISK_FILE) != block->len)
+	if (fseek(DISK_FILE, position + BLOCK_LEN_SIZE, SEEK_SET) != 0)
 		return 4;
+
+	if (fwrite(block->data, 1, block->len, DISK_FILE) != block->len)
+		return 5;
 
 	return 0;
 }
 
 short block_read(block_t *block)
 {
-	// TODO check position
 	uint64_t len;
 
 	size_t position = BLOCKS_SHIFT + block->pos * BLOCK_SIZE;

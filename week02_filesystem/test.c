@@ -160,6 +160,19 @@ void block_test()
 	assert(b->data[0] == 0xAB);
 	assert(b->data[1] == 0xCD);
 
+	b->data[1] = 0xFA;
+	assert(block_write(b) == 0);
+	b->data[1] = 0x00;
+	assert(block_read(b) == 0);
+	assert(b->data[0] == 0xAB);
+	assert(b->data[1] == 0xFA);
+	b->data[1] = 0xCD;
+	assert(block_write(b) == 0);
+	b->data[1] = 0x00;
+	assert(block_read(b) == 0);
+	assert(b->data[0] == 0xAB);
+	assert(b->data[1] == 0xCD);
+
 	block_free(a);
 	block_free(b);
 	block_free(c);
