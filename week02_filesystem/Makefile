@@ -12,7 +12,7 @@ FOLDER_FILES = $(foreach item,$(FOLDERS),$(item)/$(item).o)
 
 all: options folders
 	$(CC) -c $(CFLAGS) $(SRC)
-	$(CC) $(CFLAGS) $(OBJ) $(FOLDER_FILES) -o nn -lm
+	$(CC) $(CFLAGS) $(OBJ) $(FOLDER_FILES) -o fs.out
 
 .ONESHELL:
 folders:

@@ -7,15 +7,16 @@
 #include "disk.h"
 
 #define SUPERBLOCK_ATOM 8
-#define SUPERBLOCK_PARAMETERS 6
+#define SUPERBLOCK_PARAMETERS 7
 #define SUPERBLOCK_SIZE (SUPERBLOCK_ATOM * SUPERBLOCK_PARAMETERS)
 
-uint64_t BLOCK_COUNT;
-uint64_t INODE_COUNT;
-uint64_t BLOCK_FREE;
-uint64_t INODE_FREE;
-uint64_t BLOCK_SIZE;
-uint64_t INODE_SIZE;
+extern uint64_t BLOCK_COUNT;
+extern uint64_t INODE_COUNT;
+extern uint64_t BLOCK_FREE;
+extern uint64_t INODE_FREE;
+extern uint64_t BLOCK_SIZE;
+extern uint64_t INODE_SIZE;
+extern uint64_t MAX_NAME_LEN;
 // TODO try to add union to simplify read/write
 
 short read_superblock();

@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 
-char *DISK_PATH;
-FILE *DISK_FILE;
+extern char *DISK_PATH;
+extern FILE *DISK_FILE;
 
 short disk_init();
 short disk_mount();

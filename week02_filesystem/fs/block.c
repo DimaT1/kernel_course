@@ -8,6 +8,11 @@
 #include "disk.h"
 #include "inode.h"
 
+
+uint64_t BLOCK_DATA_SIZE;
+uint64_t BLOCK_DATA_LEN;
+uint64_t BLOCKS_SHIFT;
+
 short blocks_init()
 {
 	BLOCK_DATA_SIZE = BLOCK_SIZE - 8;

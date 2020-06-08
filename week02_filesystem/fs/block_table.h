@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-uint64_t BLOCK_TABLE_LEN;
-uint64_t BLOCK_TABLE_SIZE;
+extern uint64_t BLOCK_TABLE_LEN;
+extern uint64_t BLOCK_TABLE_SIZE;
 
 short block_table_init();
 short block_table_check_used(uint64_t, short *);

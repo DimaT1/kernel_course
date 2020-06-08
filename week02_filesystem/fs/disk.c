@@ -2,6 +2,10 @@
 
 #include "disk.h"
 
+
+char *DISK_PATH;
+FILE *DISK_FILE;
+
 short disk_init()
 {
 	DISK_PATH = NULL;

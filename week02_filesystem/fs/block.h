@@ -7,9 +7,9 @@
 #define BLOCK_LEN_SIZE 8
 #define BLOCK_POS_SIZE 8
 
-uint64_t BLOCK_DATA_SIZE;
-uint64_t BLOCK_DATA_LEN;
-uint64_t BLOCKS_SHIFT;
+extern uint64_t BLOCK_DATA_SIZE;
+extern uint64_t BLOCK_DATA_LEN;
+extern uint64_t BLOCKS_SHIFT;
 
 typedef struct {
 	uint64_t len;

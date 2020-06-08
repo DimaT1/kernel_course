@@ -6,6 +6,10 @@
 #include "disk.h"
 #include "superblock.h"
 
+
+uint64_t BLOCK_TABLE_LEN;
+uint64_t BLOCK_TABLE_SIZE;
+
 #define BLOCK_TABLE_ATOM 1
 #define ATOM_SIZE 8
 
@@ -13,6 +17,7 @@ static uint8_t *block_table;
 
 short block_table_init()
 {
+	/* For now it works only if BLOCK_COUNT % ATOM_SIZE == 0 */
 	size_t buf_size;
 	if (block_table != NULL)
 		return 1;

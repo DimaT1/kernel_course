@@ -29,6 +29,6 @@ Inode consists of:
   - 1 byte bool (is a directory or not)
   - 8 bytes parent node id
   - 8 bytes link node id
-  - 256 byte name
+  - 8 byte name
   - child nodes ids (if this inode is a directory)
   - blocks addresses (if this inode is a file)
